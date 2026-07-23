@@ -1,0 +1,471 @@
+{
+  "name": "Resumen diario",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 23,
+              "triggerAtMinute": 55
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -720,
+        -128
+      ],
+      "id": "cbad1123-c1e4-41e7-b87e-d4c814ef0854",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appEQuzH5thdmC7sQ",
+          "mode": "list",
+          "cachedResultName": "Control Gastos",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbliwRuokaGfr4hph",
+          "mode": "list",
+          "cachedResultName": "Gastos",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ/tbliwRuokaGfr4hph"
+        },
+        "filterByFormula": "{RegistroNotificado} = \"Pendiente\"",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -528,
+        -128
+      ],
+      "id": "3089a1c5-68a2-42dc-a513-872766e21a54",
+      "name": "Search records",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "a7towW2QBsMINUTy",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "18616206-f13c-4357-97ee-83a6ee7795a3",
+              "leftValue": "={{ $('Search records').item.json.id }}",
+              "rightValue": "=",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -160,
+        -128
+      ],
+      "id": "daef48a8-d2cc-4dbe-885d-3b9c6db8114b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "toRecipients": "mms_masm@hotmail.com",
+        "subject": "Resumen de registros realizados",
+        "bodyContent": "=Se registraron {{ $json.totalGastos }} gastos el día de hoy.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        272,
+        -208
+      ],
+      "id": "0c55744c-a78e-4c3f-934d-49522a055864",
+      "name": "Send a message",
+      "webhookId": "1d1e1e4e-ff88-47a0-8645-f674a87626a9",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1hUlGDLLuJZemVqc",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nreturn [{\n  json: {\n    totalGastos: items.length,\n    montoTotal: items.reduce((s, i) => s + Number(i.json.Monto || 0), 0)\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        -208
+      ],
+      "id": "5c48559b-bca1-46b1-b870-d316522eae82",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appEQuzH5thdmC7sQ",
+          "mode": "list",
+          "cachedResultName": "Control Gastos",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbliwRuokaGfr4hph",
+          "mode": "list",
+          "cachedResultName": "Gastos",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ/tbliwRuokaGfr4hph"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "RegistroNotificado": "Notificado",
+            "id": "={{ $json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha Registro",
+              "displayName": "Fecha Registro",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Establecimiento_txt",
+              "displayName": "Establecimiento_txt",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Establecimiento",
+              "displayName": "Establecimiento",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Importe",
+              "displayName": "Importe",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Categoria",
+              "displayName": "Categoria",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Fuente",
+              "displayName": "Fuente",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pendiente",
+                  "value": "Pendiente"
+                },
+                {
+                  "name": "Conciliado",
+                  "value": "Conciliado"
+                },
+                {
+                  "name": "Error",
+                  "value": "Error"
+                },
+                {
+                  "name": "Omitir",
+                  "value": "Omitir"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "RegistroNotificado",
+              "displayName": "RegistroNotificado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pendiente",
+                  "value": "Pendiente"
+                },
+                {
+                  "name": "Notificado",
+                  "value": "Notificado"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Assignee",
+              "displayName": "Assignee",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Attachments",
+              "displayName": "Attachments",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Attachment Summary",
+              "displayName": "Attachment Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -336,
+        -128
+      ],
+      "id": "95b6849f-8969-40b3-afed-2bcf4555f1e8",
+      "name": "Update record",
+      "alwaysOutputData": false,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "a7towW2QBsMINUTy",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "Update record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update record": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "America/Mexico_City",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "2bKvAPHbr0lAeyGn"
+  },
+  "versionId": "07d39b93-8b77-4823-8499-405d315fb810",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2a86ae658d108e200f2852afe7490832d1c184b089f7ab98a70a337dc1815f1f"
+  },
+  "id": "htGKT98nVlG89YLr",
+  "tags": []
+}

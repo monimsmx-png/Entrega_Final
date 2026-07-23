@@ -1,0 +1,2305 @@
+{
+  "name": "Registro_de_gastos",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "hour": 7
+            }
+          ]
+        },
+        "output": "fields",
+        "fields": [
+          "body",
+          "createdDateTime",
+          "from",
+          "hasAttachments",
+          "subject"
+        ],
+        "filters": {
+          "foldersToInclude": [
+            "AQMkADAwATE0YTQwLTdmMDEtODljMS0wMAItMDAKAC4AAAMorHN9In53SY3252jWrRdtAQD7AGszDtkvQ5uAxkATdKcpAAACAQwAAAA="
+          ],
+          "readStatus": "unread",
+          "sender": "notificaciones@banamex.com"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlookTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2192,
+        -464
+      ],
+      "id": "7b35ac0a-fa04-4478-bd85-0067fe46ff5c",
+      "name": "Microsoft Outlook Trigger",
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "retryOnFail": false,
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1hUlGDLLuJZemVqc",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appEQuzH5thdmC7sQ",
+          "mode": "list",
+          "cachedResultName": "Control Gastos",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblOkjcpiGvLKfso9",
+          "mode": "list",
+          "cachedResultName": "Establecimientos",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ/tblOkjcpiGvLKfso9"
+        },
+        "filterByFormula": "={Establecimiento} = \"{{ $('Normaliza datos').item.json.Establecimiento }}\"",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -880,
+        -384
+      ],
+      "id": "b82c6c89-328e-4a74-a72a-c8080acee39a",
+      "name": "Verifica el Establecimiento",
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "a7towW2QBsMINUTy",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appEQuzH5thdmC7sQ",
+          "mode": "list",
+          "cachedResultName": "Control Gastos",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbliwRuokaGfr4hph",
+          "mode": "list",
+          "cachedResultName": "Gastos",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ/tbliwRuokaGfr4hph"
+        },
+        "filterByFormula": "={EmailID} = \"{{ $('Microsoft Outlook Trigger').item.json.id }}\"",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -1296,
+        -480
+      ],
+      "id": "9f1ae0ef-4cd0-4941-984d-ff9e1bdf8c0d",
+      "name": "Busca duplicados Gasto",
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "a7towW2QBsMINUTy",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appEQuzH5thdmC7sQ",
+          "mode": "list",
+          "cachedResultName": "Control Gastos",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbliwRuokaGfr4hph",
+          "mode": "list",
+          "cachedResultName": "Gastos",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ/tbliwRuokaGfr4hph"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Establecimiento_txt": "={{ $json.fields.Establecimiento }}",
+            "Establecimiento": "={{ [$json.id] }}",
+            "Importe": "={{ $('Normaliza datos').item.json.Monto }}",
+            "Fecha": "={{ $('Normaliza datos').item.json['Fecha y hora'] }}",
+            "Fuente": "\"NOT\"",
+            "RegistroNotificado": "Pendiente",
+            "Estado": "Pendiente",
+            "EmailID": "={{ $('Microsoft Outlook Trigger').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha Registro",
+              "displayName": "Fecha Registro",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Establecimiento_txt",
+              "displayName": "Establecimiento_txt",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Establecimiento",
+              "displayName": "Establecimiento",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Importe",
+              "displayName": "Importe",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Categoria",
+              "displayName": "Categoria",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Fuente",
+              "displayName": "Fuente",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pendiente",
+                  "value": "Pendiente"
+                },
+                {
+                  "name": "Conciliado",
+                  "value": "Conciliado"
+                },
+                {
+                  "name": "Error",
+                  "value": "Error"
+                },
+                {
+                  "name": "Omitir",
+                  "value": "Omitir"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "RegistroNotificado",
+              "displayName": "RegistroNotificado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pendiente",
+                  "value": "Pendiente"
+                },
+                {
+                  "name": "Notificado",
+                  "value": "Notificado"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "EmailID",
+              "displayName": "EmailID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Assignee",
+              "displayName": "Assignee",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Attachments",
+              "displayName": "Attachments",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Attachment Summary",
+              "displayName": "Attachment Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        112,
+        -624
+      ],
+      "id": "6df62ee1-511f-4e70-97db-63a0503820eb",
+      "name": "Crea Gasto",
+      "retryOnFail": false,
+      "alwaysOutputData": false,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "a7towW2QBsMINUTy",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appEQuzH5thdmC7sQ",
+          "mode": "list",
+          "cachedResultName": "Control Gastos",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblOkjcpiGvLKfso9",
+          "mode": "list",
+          "cachedResultName": "Establecimientos",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ/tblOkjcpiGvLKfso9"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Establecimiento": "={{ $('Normaliza datos').item.json.Establecimiento }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha Creacion",
+              "displayName": "Fecha Creacion",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Establecimiento",
+              "displayName": "Establecimiento",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Categoria_txt",
+              "displayName": "Categoria_txt",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "",
+                  "value": ""
+                },
+                {
+                  "name": "Por Asignar",
+                  "value": "Por Asignar"
+                },
+                {
+                  "name": "Ahorro",
+                  "value": "Ahorro"
+                },
+                {
+                  "name": "Automovil - Casetas/Estacionamiento",
+                  "value": "Automovil - Casetas/Estacionamiento"
+                },
+                {
+                  "name": "Automovil - Gasolina",
+                  "value": "Automovil - Gasolina"
+                },
+                {
+                  "name": "Automovil - Servicio",
+                  "value": "Automovil - Servicio"
+                },
+                {
+                  "name": "Casa - Agua",
+                  "value": "Casa - Agua"
+                },
+                {
+                  "name": "Casa - Electricidad",
+                  "value": "Casa - Electricidad"
+                },
+                {
+                  "name": "Casa - Gas",
+                  "value": "Casa - Gas"
+                },
+                {
+                  "name": "Casa - Internet",
+                  "value": "Casa - Internet"
+                },
+                {
+                  "name": "Casa - Mantenimiento",
+                  "value": "Casa - Mantenimiento"
+                },
+                {
+                  "name": "Casa - Mercado",
+                  "value": "Casa - Mercado"
+                },
+                {
+                  "name": "Casa - Predial",
+                  "value": "Casa - Predial"
+                },
+                {
+                  "name": "Casa - Servicios Streaming",
+                  "value": "Casa - Servicios Streaming"
+                },
+                {
+                  "name": "Casa - Supermercado",
+                  "value": "Casa - Supermercado"
+                },
+                {
+                  "name": "Celular",
+                  "value": "Celular"
+                },
+                {
+                  "name": "Comision anual",
+                  "value": "Comision anual"
+                },
+                {
+                  "name": "Cuidado personal",
+                  "value": "Cuidado personal"
+                },
+                {
+                  "name": "Educación",
+                  "value": "Educación"
+                },
+                {
+                  "name": "Entretenimiento",
+                  "value": "Entretenimiento"
+                },
+                {
+                  "name": "Impuestos",
+                  "value": "Impuestos"
+                },
+                {
+                  "name": "Regalos",
+                  "value": "Regalos"
+                },
+                {
+                  "name": "Restaurantes/Antojos",
+                  "value": "Restaurantes/Antojos"
+                },
+                {
+                  "name": "Ropa/Calzado/Accesorios",
+                  "value": "Ropa/Calzado/Accesorios"
+                },
+                {
+                  "name": "Seguro - GMM",
+                  "value": "Seguro - GMM"
+                },
+                {
+                  "name": "Seguro - Varios",
+                  "value": "Seguro - Varios"
+                },
+                {
+                  "name": "SMA - Gastos extras",
+                  "value": "SMA - Gastos extras"
+                },
+                {
+                  "name": "SMA - Servicios",
+                  "value": "SMA - Servicios"
+                },
+                {
+                  "name": "Software",
+                  "value": "Software"
+                },
+                {
+                  "name": "Transporte",
+                  "value": "Transporte"
+                },
+                {
+                  "name": "Vacaciones",
+                  "value": "Vacaciones"
+                },
+                {
+                  "name": "Automovil - Seguro Auto",
+                  "value": "Automovil - Seguro Auto"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Subcategoria_id",
+              "displayName": "Subcategoria_id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Name (from Subcategoria_id)",
+              "displayName": "Name (from Subcategoria_id)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Subcategoria",
+              "displayName": "Subcategoria",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Electricidad",
+                  "value": "Electricidad"
+                },
+                {
+                  "name": "Servicios Streaming",
+                  "value": "Servicios Streaming"
+                },
+                {
+                  "name": "Supermercado",
+                  "value": "Supermercado"
+                },
+                {
+                  "name": "Mercado",
+                  "value": "Mercado"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Revisado",
+              "displayName": "Revisado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Aprobado",
+              "displayName": "Aprobado",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Assignee",
+              "displayName": "Assignee",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Attachments",
+              "displayName": "Attachments",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Attachment Summary",
+              "displayName": "Attachment Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Gastos",
+              "displayName": "Gastos",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -48,
+        -336
+      ],
+      "id": "2794c08a-41dc-475b-ab45-90ec34a8effe",
+      "name": "Crea Establecimiento",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "a7towW2QBsMINUTy",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5.1",
+          "mode": "list",
+          "cachedResultName": "GPT-5.1"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Eres un extractor de información. \nAnaliza el contenido del correo, aunque venga en HTML.\nDebes devolver únicamente JSON válido.\n\nNo agregues explicaciones.\nNo agregues texto antes ni después del JSON.\n\nLa fecha debe devolverse en formato YYYY-MM-DD HH:mm:ss\n\nSi algún dato no existe, devuelve cadena vacía."
+            },
+            {
+              "content": "=Extrae la siguiente información del correo\n{\n  \"Monto\": \"number\",\n  \"Establecimiento\": \"string\",\n  \"Fecha y hora\": \"YYYY-MM-DD HH:mm:ss\"\n}\n\nCorreo:\n {{ $json.body.content }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "maxTokens": 100
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        -2000,
+        -464
+      ],
+      "id": "80fcc0b9-9e76-4f24-9590-529f4707c8e6",
+      "name": "Extrae datos con IA",
+      "alwaysOutputData": false,
+      "credentials": {
+        "openAiApi": {
+          "id": "aZ7jGBsvAEGkv6zC",
+          "name": "OpenAI account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nconst texto = $json.output[0].content[0].text;\n\nlet datos;\n\ntry {\n  datos = JSON.parse(texto);\n} catch (e) {\n  throw new Error(\"La IA no devolvió un JSON válido:\\n\\n\" + texto);\n}\n\nreturn [\n  {\n    json: datos\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1680,
+        -624
+      ],
+      "id": "c90ef56c-88f8-4493-bd9b-ea5329c26966",
+      "name": "Normaliza datos"
+    },
+    {
+      "parameters": {
+        "content": "Para que se asigne la  subcategoria correspondente",
+        "height": 112,
+        "width": 166
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        304,
+        -288
+      ],
+      "typeVersion": 1,
+      "id": "74070a29-4b22-431d-a79e-4484a2786875",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a43afc4f-1e60-4d64-8bab-dcc40430aab7",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "0",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1104,
+        -480
+      ],
+      "id": "58fad002-23e9-4fac-ae1a-2a9e4519e055",
+      "name": "¿Gasto duplicado?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "153b7b31-f404-4f2a-bc21-f683c68bcebc",
+              "leftValue": "={{ $json.fields }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -672,
+        -608
+      ],
+      "id": "7deb0126-3338-42a5-8079-1b89526cce94",
+      "name": "¿Establecimiento existe?"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "toRecipients": "mms_masm@hotmail.com",
+        "subject": "Aprobación de alta de Establecimiento",
+        "message": "=Se identificó un nuevo Establecimiento, favor de autorizar su creación. \n\n{{ $('Normaliza datos').item.json.Establecimiento }}\n",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "Aprobar",
+            "disapproveLabel": "Descartar"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -480,
+        -320
+      ],
+      "id": "20ad86cf-83cc-4912-8e99-56c34e80fda2",
+      "name": "Solicita aprobación",
+      "webhookId": "f7d03b73-7b50-4059-a5c7-9b16b5a86ecb",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1hUlGDLLuJZemVqc",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2b76c695-443b-4648-b570-9805868d69da",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": "=true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -288,
+        -320
+      ],
+      "id": "aec8f1ae-898a-4f0a-86c5-b2f55347c4d5",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "toRecipients": "mms_masm@hotmail.com",
+        "subject": "Establecimiento RECHAZADO",
+        "bodyContent": "=Se ha RECHAZADO el alta del Establecimiento {{ $('Establecimiento vacío').item.json.Establecimiento }} por lo que el Gasto relacionado al mismo tampoco ha sido creado.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -96,
+        32
+      ],
+      "id": "15f5c095-fa3d-4315-b769-e6ee3bd32a35",
+      "name": "Notifica establecimiento y gasto no creados",
+      "webhookId": "b669fec0-086b-4f13-a2d7-0e5ca46476e5",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1hUlGDLLuJZemVqc",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6e5ec716-8516-4966-bbdf-64941c209881",
+              "leftValue": "={{ $json.Establecimiento }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1504,
+        -624
+      ],
+      "id": "3ebd0c90-0509-41f1-8732-a14df77ea176",
+      "name": "Establecimiento vacío"
+    },
+    {
+      "parameters": {
+        "content": "Si el Establecimiento está vacío, se trata de un depósito y en esta versión del sistema no tiene relevancia y no es necesario capturarlo",
+        "height": 128,
+        "width": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1552,
+        -784
+      ],
+      "typeVersion": 1,
+      "id": "d4055e21-e1b2-4bac-9024-16ec2e551aa7",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appEQuzH5thdmC7sQ",
+          "mode": "list",
+          "cachedResultName": "Control Gastos",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl7kgyG9Y50xqiCo",
+          "mode": "list",
+          "cachedResultName": "Fallas",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ/tbl7kgyG9Y50xqiCo"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Mensaje_Error": "={{ $json.error }}",
+            "Workflow": "={{ $workflow.id }} - {{ $workflow.name }}",
+            "Nodo_Origen": "Extrae datos con IA"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID_falla",
+              "displayName": "ID_falla",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha_Hora",
+              "displayName": "Fecha_Hora",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Workflow",
+              "displayName": "Workflow",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Nodo_Origen",
+              "displayName": "Nodo_Origen",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Stacktrace",
+              "displayName": "Stacktrace",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Mensaje_Error",
+              "displayName": "Mensaje_Error",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Dato_Origen",
+              "displayName": "Dato_Origen",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Severidad",
+              "displayName": "Severidad",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Assignee",
+              "displayName": "Assignee",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Attachments",
+              "displayName": "Attachments",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Attachment Summary",
+              "displayName": "Attachment Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Resumen (Mensaje_Error)",
+              "displayName": "Resumen (Mensaje_Error)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Titulo (Mensaje_Error)",
+              "displayName": "Titulo (Mensaje_Error)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -1696,
+        -336
+      ],
+      "id": "f7682cd7-3678-4979-8bbc-f0630d38328c",
+      "name": "Registra error AI",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "a7towW2QBsMINUTy",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appEQuzH5thdmC7sQ",
+          "mode": "list",
+          "cachedResultName": "Control Gastos",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl7kgyG9Y50xqiCo",
+          "mode": "list",
+          "cachedResultName": "Fallas",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ/tbl7kgyG9Y50xqiCo"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Workflow": "={{ $workflow.id }} - {{ $workflow.name }}",
+            "Nodo_Origen": "Crea Establecimiento",
+            "Mensaje_Error": "={{ $json.error }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID_falla",
+              "displayName": "ID_falla",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha_Hora",
+              "displayName": "Fecha_Hora",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Workflow",
+              "displayName": "Workflow",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Nodo_Origen",
+              "displayName": "Nodo_Origen",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Stacktrace",
+              "displayName": "Stacktrace",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Mensaje_Error",
+              "displayName": "Mensaje_Error",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Dato_Origen",
+              "displayName": "Dato_Origen",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Severidad",
+              "displayName": "Severidad",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Assignee",
+              "displayName": "Assignee",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Attachments",
+              "displayName": "Attachments",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Attachment Summary",
+              "displayName": "Attachment Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Resumen (Mensaje_Error)",
+              "displayName": "Resumen (Mensaje_Error)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Titulo (Mensaje_Error)",
+              "displayName": "Titulo (Mensaje_Error)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        176,
+        -32
+      ],
+      "id": "49b74ad3-fcea-447b-8e57-c3d3ebde06f0",
+      "name": "Registra error creacion Establecimiento",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "a7towW2QBsMINUTy",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appEQuzH5thdmC7sQ",
+          "mode": "list",
+          "cachedResultName": "Control Gastos",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl7kgyG9Y50xqiCo",
+          "mode": "list",
+          "cachedResultName": "Fallas",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ/tbl7kgyG9Y50xqiCo"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Workflow": "={{ $workflow.id }} - {{ $workflow.name }}",
+            "Nodo_Origen": "Verifica el Establecimiento",
+            "Mensaje_Error": "={{ $json.error }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID_falla",
+              "displayName": "ID_falla",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha_Hora",
+              "displayName": "Fecha_Hora",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Workflow",
+              "displayName": "Workflow",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Nodo_Origen",
+              "displayName": "Nodo_Origen",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Stacktrace",
+              "displayName": "Stacktrace",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Mensaje_Error",
+              "displayName": "Mensaje_Error",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Dato_Origen",
+              "displayName": "Dato_Origen",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Severidad",
+              "displayName": "Severidad",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Assignee",
+              "displayName": "Assignee",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Attachments",
+              "displayName": "Attachments",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Attachment Summary",
+              "displayName": "Attachment Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Resumen (Mensaje_Error)",
+              "displayName": "Resumen (Mensaje_Error)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Titulo (Mensaje_Error)",
+              "displayName": "Titulo (Mensaje_Error)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -672,
+        -16
+      ],
+      "id": "671954a0-dee0-4493-a704-65c8ed16bc09",
+      "name": "Registra error verifica Establecimiento",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "a7towW2QBsMINUTy",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "toRecipients": "mms_masm@hotmail.com",
+        "subject": "Nuevo establecimiento",
+        "bodyContent": "=Se ha creado un nuevo establecimiento, asignarle una subcategoría.\n\nEstablecimiento: {{ $('Crea Establecimiento').item.json.fields.Establecimiento }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        176,
+        -352
+      ],
+      "id": "1bec96f8-f31e-44cd-ac58-d2d4fcce4df9",
+      "name": "Notifica Nuevo Establecimiento",
+      "webhookId": "5dbefcbf-7a9c-437d-ab0f-8c101abc5982",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1hUlGDLLuJZemVqc",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appEQuzH5thdmC7sQ",
+          "mode": "list",
+          "cachedResultName": "Control Gastos",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl7kgyG9Y50xqiCo",
+          "mode": "list",
+          "cachedResultName": "Fallas",
+          "cachedResultUrl": "https://airtable.com/appEQuzH5thdmC7sQ/tbl7kgyG9Y50xqiCo"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Workflow": "={{ $workflow.id }} - {{ $workflow.name }}",
+            "Mensaje_Error": "={{ $json.error }}",
+            "Nodo_Origen": "Crea Gasto"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID_falla",
+              "displayName": "ID_falla",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha_Hora",
+              "displayName": "Fecha_Hora",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Workflow",
+              "displayName": "Workflow",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Nodo_Origen",
+              "displayName": "Nodo_Origen",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Stacktrace",
+              "displayName": "Stacktrace",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Mensaje_Error",
+              "displayName": "Mensaje_Error",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Dato_Origen",
+              "displayName": "Dato_Origen",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Severidad",
+              "displayName": "Severidad",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Assignee",
+              "displayName": "Assignee",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Attachments",
+              "displayName": "Attachments",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Attachment Summary",
+              "displayName": "Attachment Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Resumen (Mensaje_Error)",
+              "displayName": "Resumen (Mensaje_Error)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Titulo (Mensaje_Error)",
+              "displayName": "Titulo (Mensaje_Error)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        320,
+        -528
+      ],
+      "id": "1a5d754b-f8eb-41f4-a57f-3baf00e779db",
+      "name": "Registra error crea gasto",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "a7towW2QBsMINUTy",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toRecipients": "mms_masm@hotmail.com",
+        "subject": "Error en registro de Establecimiento",
+        "bodyContent": "Se ha detectado un error al momento de registrar el Establecimiento.\n\n\nFavor de verificar",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        464,
+        -144
+      ],
+      "id": "3d942fd7-6fa8-4699-9cd2-dc5e06305de8",
+      "name": "Notifica error creación Establecimiento",
+      "webhookId": "a6a7078c-f009-4be8-9c74-c67cd92831cd",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1hUlGDLLuJZemVqc",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toRecipients": "mms_masm@hotmail.com",
+        "subject": "Error en la revisión de Establecimiento",
+        "bodyContent": "Se ha detectado un error al momento de verificar si el Establecimiento ya esta registrado.\n\n\nFavor de revisar",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -384,
+        -112
+      ],
+      "id": "2c03eca7-c88b-401e-95a7-a5ebc7ed8ab0",
+      "name": "Notifica error verifica Establecimiento",
+      "webhookId": "5b80ff25-cf11-4896-a0bb-4948b5bbdc10",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1hUlGDLLuJZemVqc",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toRecipients": "mms_masm@hotmail.com",
+        "subject": "Error en AI",
+        "bodyContent": "Se ha presentado un error en el nodo de AI. \n\n\nFavor de revisar.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        -1504,
+        -336
+      ],
+      "id": "5000d212-7b9c-4fdb-a00f-c5621541d209",
+      "name": "Notifica error AI",
+      "webhookId": "2c1048e1-f5fb-4c62-af32-6efbbcb7483a",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1hUlGDLLuJZemVqc",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toRecipients": "mms_masm@hotmail.com",
+        "subject": "Error al crear el Gasto",
+        "bodyContent": "Se ha detectado un error al momento de registrar el gasto:\n\n\nFavor de verificar",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        528,
+        -528
+      ],
+      "id": "8579201b-c549-4750-85b2-907a9e0f3ab4",
+      "name": "Notifica error crear Gasto",
+      "webhookId": "44a3cf23-06b3-41f6-8061-f2867fc66d04",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1hUlGDLLuJZemVqc",
+          "name": "Microsoft Outlook account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Microsoft Outlook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extrae datos con IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verifica el Establecimiento": {
+      "main": [
+        [
+          {
+            "node": "¿Establecimiento existe?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Registra error verifica Establecimiento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Busca duplicados Gasto": {
+      "main": [
+        [
+          {
+            "node": "¿Gasto duplicado?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crea Gasto": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Registra error crea gasto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crea Establecimiento": {
+      "main": [
+        [
+          {
+            "node": "Crea Gasto",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notifica Nuevo Establecimiento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Registra error creacion Establecimiento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extrae datos con IA": {
+      "main": [
+        [
+          {
+            "node": "Normaliza datos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Registra error AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normaliza datos": {
+      "main": [
+        [
+          {
+            "node": "Establecimiento vacío",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Gasto duplicado?": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Verifica el Establecimiento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Establecimiento existe?": {
+      "main": [
+        [
+          {
+            "node": "Crea Gasto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Solicita aprobación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Solicita aprobación": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Crea Establecimiento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notifica establecimiento y gasto no creados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Establecimiento vacío": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Busca duplicados Gasto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registra error AI": {
+      "main": [
+        [
+          {
+            "node": "Notifica error AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registra error verifica Establecimiento": {
+      "main": [
+        [
+          {
+            "node": "Notifica error verifica Establecimiento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registra error creacion Establecimiento": {
+      "main": [
+        [
+          {
+            "node": "Notifica error creación Establecimiento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registra error crea gasto": {
+      "main": [
+        [
+          {
+            "node": "Notifica error crear Gasto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "2bKvAPHbr0lAeyGn",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "f0d5dd34-a26d-4618-8112-82ea0b95d1fb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2a86ae658d108e200f2852afe7490832d1c184b089f7ab98a70a337dc1815f1f"
+  },
+  "id": "mbPuVRvc00kDJfM1",
+  "tags": []
+}
