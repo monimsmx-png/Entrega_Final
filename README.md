@@ -1,36 +1,42 @@
-💳 AI Expense Automation
+# 💳 AI Expense Automation
 
-Registro automatizado de gastos para control de presupuesto
+## Registro automatizado de gastos para control de presupuesto
 
 Entrega Final · CoderHouse · Mónica Maldonado
 
-📑 Índice
+Sistema autónomo construido en n8n que a partir de los correos de notificación que manda el banco con relación a los gastos generados con tarjeta de crédito, registra cada uno de los gastos que son notificados en Airtable (actúa como base de datos), extrae los datos clave del gasto usando IA (GPT-5), verifica que el establecimiento en donde se realizó el gasto no esté registrado, en este caso solicita aprobación (HITL) para registrarlo, y una vez autorizado, o si el establecimiento ya existe, registra el gasto. Notifica cuando hay un error y lo registra en la tabla Fallas. El final del día manda un resumen del total de registros capturados en el día.
 
-Objetivo
+La solución incorpora principios de arquitectura empresarial como:
 
-Caso de Uso
+-	Automatización basada en eventos 
+-	Human in the Loop (HITL) 
+- Validación de duplicados 
+- Modelo relacional 
+- Manejo de errores 
+- Modularidad 
+- Escalabilidad
 
-Buenas Prácticas Implementadas
 
-Resultados Esperados
 
-Arquitectura
+## 📑 Índice
 
-Estructura de Base de Datos
+- [Objetivo](#objetivo)
+- [Caso de Uso](#caso-de-uso)
+- [Buenas Prácticas Implementadas](#buenas-prácticas-implementadas)
+- [Resultados Esperados](#resultados-esperados)
+- [Arquitectura](#arquitectura)
+- [Estructura de Base de Datos](#estructura-de-base-de-datos-airtable)
+- [Human-In-The-Loop (HITL)](#human-in-the-loop-hitl)
+- [Salida Multicanal](#salida-multicanal)
+- [Pruebas](#pruebas)
+- [Enlaces de la Entrega](#enlaces-de-la-entrega)
 
-Human-In-The-Loop (HITL)
 
-Salida Multicanal
-
-Pruebas
-
-Enlaces de la Entrega
-
-🎯 Objetivo
+## Objetivo🎯
 Eliminar el registro manual de gastos bancarios y mantener un historial estructurado para análisis financiero, conciliación y generación de reportes.
 
-🧩 Caso de Uso
-“Para mí es importante llevar un control de todos mis gastos, ya que todos los realizo con tarjetas de crédito, y luego así es fácil perder el control…”
+## Caso de Uso🧩
+Es importante llevar un control de todos mis gastos, ya que todos los realizo con tarjetas de crédito, y luego así es fácil perder el control…
 
 El sistema:
 
@@ -47,35 +53,25 @@ Envía un resumen diario de registros.
 Clasificación IA Act: Riesgo Mínimo / Limitado
 GDPR: Minimización de Datos (Art. 5.1.c) · Limitación de la Finalidad (Art. 5.1.b)
 
-🍀 Buenas Prácticas Implementadas
-Idempotencia
+## Buenas Prácticas Implementadas🍀
+- Idempotencia
+- Linked Records
+- Separación de responsabilidades
+- Arquitectura modular
+- Manejo de errores
+- JSON normalizado
+- Validaciones previas
+- Human‑In‑The‑Loop
 
-Linked Records
+## Resultados Esperados📈
+- Reducción del tiempo de captura manual
+- Eliminación de duplicados
+- Centralización de gastos
+- Mejora en trazabilidad
+- Base preparada para análisis financiero
 
-Separación de responsabilidades
+## Arquitectura🧱
 
-Arquitectura modular
-
-Manejo de errores
-
-JSON normalizado
-
-Validaciones previas
-
-Human‑In‑The‑Loop
-
-📈 Resultados Esperados
-Reducción del tiempo de captura manual
-
-Eliminación de duplicados
-
-Centralización de gastos
-
-Mejora en trazabilidad
-
-Base preparada para análisis financiero
-
-🏗️ Arquitectura
 | Uso | Tecnología | Descripción |
 | --- | --- | --- |
 | Orquestador | n8n (local) | Flujo principal y flujo para reporte diario |
@@ -87,7 +83,8 @@ Base preparada para análisis financiero
 
 📄 Diagrama completo en: ![Diagrama_Arquitectura.pdf](https://github.com/monimsmx-png/Entrega_Final/blob/master/Diagrama%20AI%20Expense%20Automation-Final%20MNX-MVP-AI.pdf)
 
-🗄️ Estructura de Base de Datos (Airtable)
+## Estructura de Base de Datos Airtable
+
 Tabla: Gastos
 | Campo | Tipo | Comentarios |
 | --- | --- | --- |
@@ -142,28 +139,26 @@ Tabla: Fallas
 | Severidad | Texto |
 
 
-🔗 Relaciones
+### Relaciones🔗
 Cadena jerárquica principal:
 
-Código
 Categorias → Subcategorias → Establecimientos → Gastos
+
 La tabla Fallas es independiente.
 
-Categorias → Subcategorias → Establecimientos → Gastos
 
-
-👤 Human‑In‑The‑Loop (HITL)
+## Human‑In‑The‑Loop HITL
 Se requiere aprobación humana para registrar establecimientos nuevos debido a variaciones en los nombres que envían los bancos.
 
-📡 Salida Multicanal
+## Salida Multicanal📡
 Actualmente solo correo electrónico (Outlook).
 No se incluye WhatsApp Business ni Slack.
 
-🧪 Pruebas
+## Pruebas🧪
 Se realizaron pruebas preliminares con registros reales y correos recibidos durante varios días.
 El sistema aún no se publica.
 
-🔗 Enlaces de la Entrega
+## Enlaces de la Entrega🔗
 🎥 Video demo (3 min)
 
 📊 Base Airtable (modo lectura):  
