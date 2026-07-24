@@ -1,8 +1,11 @@
 💳 AI Expense Automation
+
 Registro automatizado de gastos para control de presupuesto
+
 Entrega Final · CoderHouse · Mónica Maldonado
 
 📑 Índice
+
 Objetivo
 
 Caso de Uso
@@ -145,6 +148,9 @@ Cadena jerárquica principal:
 Código
 Categorias → Subcategorias → Establecimientos → Gastos
 La tabla Fallas es independiente.
+
+Categorias → Subcategorias → Establecimientos → Gastos
+
 
 👤 Human‑In‑The‑Loop (HITL)
 Se requiere aprobación humana para registrar establecimientos nuevos debido a variaciones en los nombres que envían los bancos.
