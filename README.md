@@ -85,7 +85,7 @@ Base preparada para análisis financiero
 | Canal de salida | Outlook | Aprobaciones HITL, errores, notificaciones |
 
 
-📄 Diagrama completo en: ![Diagrama_Arquitectura.pdf](https://drive.google.com/file/d/1PHDS0tsKfAqKOwLawarmdfOppzhP95l3/view?usp=sharing)
+📄 Diagrama completo en: ![Diagrama_Arquitectura.pdf](https://github.com/monimsmx-png/Entrega_Final/blob/master/Diagrama%20AI%20Expense%20Automation-Final%20MNX-MVP-AI.pdf)
 
 🗄️ Estructura de Base de Datos (Airtable)
 Tabla: Gastos
