@@ -159,13 +159,15 @@ Se realizaron pruebas preliminares con registros reales y correos recibidos dura
 El sistema aún no se publica.
 
 ## Enlaces de la Entrega🔗
-🎥 Video demo (3 min)
+🎥 Video demo (3 min): https://drive.google.com/file/d/1_O5s3GAERuYR9qR05nNIvyGg_ZiqpFgv/view?usp=sharing
 
 📊 Base Airtable (modo lectura):  
 https://airtable.com/invite/l?inviteId=invpa2hVzozdZ0jWk&inviteToken=3f3680aa9f0fba1eda4c66d81eb94daa14c63a80966b274497ca3246d62291e3&utm_medium=email&utm_source=product_team&utm_content=transactional-alerts
 
-📐 Diagrama de Arquitectura
+📐 Diagrama de Arquitectura: https://drive.google.com/file/d/1PHDS0tsKfAqKOwLawarmdfOppzhP95l3/view?usp=sharing
 
-🔁 Lógica de Flujo
+🔁 Lógica de Flujo principal: https://drive.google.com/file/d/192X5rojsZlg-bwTJl_jzNZ2j1X91EOi-/view?usp=sharing
 
-📁 Evidencias
+🔁 Lógica de Flujo 2: https://drive.google.com/file/d/1OLXAYwpWxvhURByQpej6rWKAJfS6Gdcm/view?usp=sharing
+
+📁 Evidencias: https://drive.google.com/file/d/1Q5-7uoiaw28yCSfITOMEXUSdp8-suU_y/view?usp=sharing
