@@ -84,6 +84,17 @@ GDPR: Minimización de Datos (Art. 5.1.c) · Limitación de la Finalidad (Art. 5
 
 📄 Diagrama completo en: ![Diagrama_Arquitectura.pdf](https://github.com/monimsmx-png/Entrega_Final/blob/master/Diagrama%20AI%20Expense%20Automation-Final%20MNX-MVP-AI.pdf)
 
+### Arquitectura Híbrida de Inteligencia Artificial
+
+| Proceso |	¿Usa IA?	| Tecnología |
+| --- | --- | --- |
+| Recepción de correo |	❌	| Outlook Trigger |
+| Detección de duplicados	| ❌	| Airtable |
+| Extracción de datos	| ✅	| GPT-5.1 |
+| Validación JSON	| ❌	| JavaScript |
+| Aprobación	| ❌	| Human in the Loop |
+| Registro en Airtable	| ❌	| Airtable |
+
 ## Estructura de Base de Datos Airtable
 
 Tabla: Gastos
@@ -169,6 +180,11 @@ Selección del modelo de IA
 | Leer HTML bancario	| Alta	| GPT-5.1 |
 | Extraer JSON	| Alta	| GPT-5.1 |
 | Detectar duplicados	| No requiere IA	| Regla de negocio |
+
+### Decisiones de Diseño
+¿Por qué utilizar GPT-5.1?
+
+Se evaluaron distintos modelos considerando precisión, costo y capacidad de interpretación de contenido HTML. Dado que el objetivo principal del proyecto era demostrar la viabilidad técnica del proceso y minimizar errores en la extracción de información financiera, se seleccionó GPT-5.1 como modelo principal para el MVP.
 
 ## Human‑In‑The‑Loop HITL
 Se requiere aprobación humana para registrar establecimientos nuevos debido a variaciones en los nombres que envían los bancos.
