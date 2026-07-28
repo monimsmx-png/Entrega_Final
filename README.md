@@ -197,11 +197,14 @@ No se incluye WhatsApp Business ni Slack.
 Se realizaron pruebas preliminares con registros reales y correos recibidos durante varios días.
 El sistema aún no se publica.
 
+## Panel de Control (Shared View) 
+Se incluye una vista compartida de solo lectura que presenta los gastos registrados por el flujo de automatización. La información está agrupada por categoría e incluye el importe acumulado por grupo y el total general de gastos, permitiendo validar los principales indicadores del MVP sin otorgar acceso de edición a la base de datos.
+
 ## Enlaces de la Entrega🔗
 🎥 Video demo (3 min): https://drive.google.com/file/d/1_O5s3GAERuYR9qR05nNIvyGg_ZiqpFgv/view?usp=sharing
 
 📊 Base Airtable (modo lectura):  
-https://airtable.com/invite/l?inviteId=invpa2hVzozdZ0jWk&inviteToken=3f3680aa9f0fba1eda4c66d81eb94daa14c63a80966b274497ca3246d62291e3&utm_medium=email&utm_source=product_team&utm_content=transactional-alerts
+[https://airtable.com/invite/l?inviteId=invpa2hVzozdZ0jWk&inviteToken=3f3680aa9f0fba1eda4c66d81eb94daa14c63a80966b274497ca3246d62291e3&utm_medium=email&utm_source=product_team&utm_content=transactional-alerts](https://airtable.com/appEQuzH5thdmC7sQ/shrKOtnGeVN5CMPTg)
 
 📐 Diagrama de Arquitectura: https://drive.google.com/file/d/1PHDS0tsKfAqKOwLawarmdfOppzhP95l3/view?usp=sharing
 
