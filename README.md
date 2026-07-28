@@ -26,6 +26,7 @@ La solución incorpora principios de arquitectura empresarial como:
 - [Resultados Esperados](#resultados-esperados)
 - [Arquitectura](#arquitectura)
 - [Estructura de Base de Datos](#estructura-de-base-de-datos-airtable)
+- [Matriz de Decisión del Modelo de AI](#matriz-de-decisión-del-modelo-de-ai)
 - [Human-In-The-Loop (HITL)](#human-in-the-loop-hitl)
 - [Salida Multicanal](#salida-multicanal)
 - [Pruebas](#pruebas)
@@ -146,6 +147,28 @@ Categorias → Subcategorias → Establecimientos → Gastos
 
 La tabla Fallas es independiente.
 
+## Matriz de decisión del modelo de AI
+En esta primera versión del sistema (MVP), el flujo utiliza la IA solo para la extracción de datos del correo.  A continuación, la evaluación y justificación de porque se eligió GPT-5.1
+
+| Tarea	| GPT-5.1	| GPT-5 nano	| GPT-4.1 | Claude	| Gemini	| Modelo seleccionado |	Justificación |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Extracción de datos de correo HTML	| ⭐⭐⭐⭐⭐	| ⭐⭐⭐	| ⭐⭐⭐⭐⭐	| ⭐⭐⭐⭐ |	⭐⭐⭐⭐	| GPT-5.1	| Mayor precisión interpretando HTML y devolviendo JSON consistente. |
+
+Criterio pomderado
+| Criterio |	Peso	| GPT-5.1 |	GPT-5 nano |
+| --- | --- | --- | --- |
+| Precisión	| 40%	| 5	| 4 |
+| Costo |	30% |	3	| 5 |
+| Velocidad	| 20%	| 4	| 5 |
+| Consistencia | JSON	| 10%	| 5	| 4 |
+| Resultado ponderado	|	 | 4.3	| 4.5 |
+
+Selección del modelo de IA
+| Proceso	| Complejidad	| Modelo recomendado |
+| --- | --- | --- |
+| Leer HTML bancario	| Alta	| GPT-5.1 |
+| Extraer JSON	| Alta	| GPT-5.1 |
+| Detectar duplicados	| No requiere IA	| Regla de negocio |
 
 ## Human‑In‑The‑Loop HITL
 Se requiere aprobación humana para registrar establecimientos nuevos debido a variaciones en los nombres que envían los bancos.
