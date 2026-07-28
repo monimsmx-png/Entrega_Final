@@ -30,6 +30,7 @@ La solución incorpora principios de arquitectura empresarial como:
 - [Human-In-The-Loop (HITL)](#human-in-the-loop-hitl)
 - [Salida Multicanal](#salida-multicanal)
 - [Pruebas](#pruebas)
+- [Panel de Control Shared View](#panel-de-control-shared-view)
 - [Enlaces de la Entrega](#enlaces-de-la-entrega)
 
 
@@ -198,7 +199,7 @@ Se realizaron pruebas preliminares con registros reales y correos recibidos dura
 El sistema aún no se publica.
 
 ## Panel de Control (Shared View) 
-Se incluye una vista compartida de solo lectura que presenta los gastos registrados por el flujo de automatización. La información está agrupada por categoría e incluye el importe acumulado por grupo y el total general de gastos, permitiendo validar los principales indicadores del MVP sin otorgar acceso de edición a la base de datos.
+Se incluye una vista compartida de solo lectura de la base en Airtable, que presenta los gastos registrados por el flujo de automatización. La información está agrupada por categoría e incluye el importe acumulado por grupo y el total general de gastos, permitiendo validar los principales indicadores del MVP sin otorgar acceso de edición a la base de datos.
 
 ## Enlaces de la Entrega🔗
 🎥 Video demo (3 min): https://drive.google.com/file/d/1_O5s3GAERuYR9qR05nNIvyGg_ZiqpFgv/view?usp=sharing
